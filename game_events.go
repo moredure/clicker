@@ -27,14 +27,6 @@ func (PlayerStateEvent) Type() string {
 	return "player_state"
 }
 
-type FinishedEvent struct {
-	Winner string `json:"winner"`
-}
-
-func (FinishedEvent) Type() string {
-	return "finished_event"
-}
-
 var (
 	startEvent      = new(StartEvent)
 	countdownEvent3 = &CountdownEvent{Tick: 3}

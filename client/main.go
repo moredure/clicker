@@ -22,12 +22,12 @@ func main() {
 	go func() {
 		defer wg.Done()
 		for {
-			_, data, err := conn.ReadMessage()
+			t, data, err := conn.ReadMessage()
 			if err != nil {
 				log.Println("close", string(data))
 				return
 			}
-			log.Println(string(data))
+			log.Println(t, string(data))
 		}
 	}()
 	go func() {

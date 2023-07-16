@@ -1,22 +1,13 @@
 package main
 
 type GameSceneControllerState interface {
-	serverController
-	timerController
-	userController
+	tap(*GameServerSession)
+	timeout()
+	countdown()
+	disconnect(*GameServerSession)
 }
 
 type (
-	userController interface {
-		tap(gss *GameServerSession)
-	}
-	timerController interface {
-		timeout()
-		countdown()
-	}
-	serverController interface {
-		disconnect(*GameServerSession)
-	}
 	stateEnterer interface {
 		onStateEnter()
 	}

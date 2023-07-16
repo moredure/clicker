@@ -8,7 +8,7 @@ type GameScene struct {
 
 func (gs *GameScene) State(username string) any {
 	if gs.winner != "" {
-		if gs.winner == username {
+		if gs.winner == username { // TODO tie
 			return "you win"
 		}
 		return "you loose"
@@ -30,18 +30,21 @@ func (gs *GameScene) Tap(username string) {
 }
 
 func (gs *GameScene) ChooseWinner() {
-	if gs.winner == "" {
+	if gs.winner != "" {
 		return
 	}
 	x := -1
 	for username, stats := range gs.stats {
-		if stats < x {
+		if stats > x {
 			gs.winner = username
 		}
 	}
 }
 
 func (gs *GameScene) Loose(username string) {
+	if gs.winner != "" {
+		return
+	}
 	for un := range gs.stats {
 		if un != username {
 			gs.winner = un
