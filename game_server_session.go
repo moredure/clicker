@@ -17,7 +17,10 @@ type GameServerSession struct {
 }
 
 func NewGameServerSession(conn *websocket.Conn, username string) *GameServerSession {
-	return &GameServerSession{conn: conn, Username: username}
+	return &GameServerSession{
+		conn:     conn,
+		Username: username,
+	}
 }
 
 func (gss *GameServerSession) Subscribe(f func(*GameServerSession, []byte)) {
