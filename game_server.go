@@ -18,12 +18,10 @@ func (g *GameServer) Handle(writer http.ResponseWriter, request *http.Request) {
 	}
 	user := request.URL.Query().Get("username") // always uniq per player
 
-	ps := &GameServerSession{
-		Username: user,
-		conn:     conn,
-	}
+	gss := NewGameServerSession(conn, user)
 
-	g.GameRoomsManager.Connect(ps)
-	defer g.GameRoomsManager.Disconnect(ps)
-	ps.ListenConn()
+	g.GameRoomsManager.Connect(gss)
+	defer g.GameRoomsManager.Disconnect(gss)
+
+	gss.ListenConn()
 }

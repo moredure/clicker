@@ -16,6 +16,10 @@ type GameServerSession struct {
 	Username string
 }
 
+func NewGameServerSession(conn *websocket.Conn, username string) *GameServerSession {
+	return &GameServerSession{conn: conn, Username: username}
+}
+
 func (gss *GameServerSession) Subscribe(f func(*GameServerSession, []byte)) {
 	gss.Lock()
 	defer gss.Unlock()
