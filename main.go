@@ -11,6 +11,7 @@ func main() {
 	r := mux.NewRouter()
 	grm := NewRoomsManager()
 	// extend with some configuration management
+	// provide some persistance layer for players/rooms/games
 	gs := &GameServer{
 		Upgrader:         new(websocket.Upgrader),
 		GameRoomsManager: grm,
