@@ -1,2 +1,2 @@
 # clicker
-Click multiplayer Golang game
+Multiplayer Golang game server with websockets
