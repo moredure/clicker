@@ -1,9 +1,9 @@
 package main
 
 type GameScene struct {
-	deadlineTimer Timer
-	stats         map[string]int
-	winner        string
+	Timer
+	stats  map[string]int
+	winner string
 }
 
 func (gs *GameScene) State(username string) any {
@@ -49,5 +49,12 @@ func (gs *GameScene) Loose(username string) {
 		if un != username {
 			gs.winner = un
 		}
+	}
+}
+
+func NewGameScene(t Timer) *GameScene {
+	return &GameScene{
+		stats: make(map[string]int, 2),
+		Timer: t,
 	}
 }

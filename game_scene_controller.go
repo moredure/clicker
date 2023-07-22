@@ -80,10 +80,8 @@ func NewGameSceneController(lobby map[*GameServerSession]struct{}, callback func
 			callback(usernames)
 		},
 	}
-	gs := new(GameScene)
-	gs.stats = make(map[string]int, 2)
-	gs.deadlineTimer = NewPausableAfterFunc(30*time.Second, gsc.timeout)
-	gsc.gameScene = gs
+	timer := NewPausableAfterFunc(30*time.Second, gsc.timeout)
+	gsc.gameScene = NewGameScene(timer)
 	gsc.readyState = &gameSceneControllerStateReady{gsc: gsc}
 	gsc.countdown3State = &gameSceneControllerCountdown3{gsc: gsc}
 	gsc.countdown2State = &gameSceneControllerCountdown2{gsc: gsc}

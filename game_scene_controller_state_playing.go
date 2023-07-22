@@ -6,11 +6,11 @@ type gameSceneControllerStatePlaying struct {
 }
 
 func (currentState *gameSceneControllerStatePlaying) onStateEnter() {
-	currentState.gsc.gameScene.deadlineTimer.Start()
+	currentState.gsc.gameScene.Start()
 }
 
 func (currentState *gameSceneControllerStatePlaying) onStateLeave() {
-	currentState.gsc.gameScene.deadlineTimer.Pause()
+	currentState.gsc.gameScene.Pause()
 }
 
 func (currentState *gameSceneControllerStatePlaying) disconnect(gss *GameServerSession) {
