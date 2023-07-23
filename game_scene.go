@@ -2,27 +2,43 @@ package main
 
 type GameScene struct {
 	Timer
-	stats  map[string]int
-	winner string
+	stats map[string]int
+	GameSceneState
 }
 
-func (gs *GameScene) State(username string) any {
-	if gs.winner != "" {
-		if gs.winner == username { // TODO tie
-			return "you win"
-		}
-		return "you loose"
-	}
+type GameSceneState interface {
+	State(username string) any
+}
+
+type Playing struct {
+	GS *GameScene
+}
+
+func (p *Playing) State(username string) any {
 	opponent := ""
-	for un := range gs.stats {
+	for un := range p.GS.stats {
 		if un != username {
 			opponent = un
 		}
 	}
 	return map[string]interface{}{
-		"you":      gs.stats[username],
-		"opponent": gs.stats[opponent],
+		"you":      p.GS.stats[username],
+		"opponent": p.GS.stats[opponent],
 	}
+}
+
+type Finished struct {
+	Winner string
+}
+
+func (p *Finished) State(username string) any {
+	if p.Winner == "" {
+		return "tie"
+	}
+	if p.Winner == username {
+		return "you win"
+	}
+	return "you loose"
 }
 
 func (gs *GameScene) Tap(username string) {
@@ -30,31 +46,29 @@ func (gs *GameScene) Tap(username string) {
 }
 
 func (gs *GameScene) ChooseWinner() {
-	if gs.winner != "" {
-		return
-	}
 	x := -1
 	for username, stats := range gs.stats {
 		if stats > x {
-			gs.winner = username
+			gs.GameSceneState = &Finished{Winner: username}
+			return
 		}
 	}
 }
 
 func (gs *GameScene) Loose(username string) {
-	if gs.winner != "" {
-		return
-	}
 	for un := range gs.stats {
 		if un != username {
-			gs.winner = un
+			gs.GameSceneState = &Finished{Winner: un}
+			return
 		}
 	}
 }
 
 func NewGameScene(t Timer) *GameScene {
-	return &GameScene{
+	gs := &GameScene{
 		stats: make(map[string]int, 2),
 		Timer: t,
 	}
+	gs.GameSceneState = &Playing{gs}
+	return gs
 }

@@ -9,7 +9,6 @@ import (
 
 func main() {
 	r := mux.NewRouter()
-
 	grm := NewRoomsManager()
 	// extend with some configuration management
 	// provide some persistance layer for players/rooms/games
@@ -17,7 +16,7 @@ func main() {
 		Upgrader:         new(websocket.Upgrader),
 		GameRoomsManager: grm,
 	}
-	r.Handle("/game", http.HandlerFunc(gs.Handle))
+	r.Handle("/game", gs)
 	s := http.Server{
 		Addr:    ":80",
 		Handler: r,

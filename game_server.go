@@ -10,7 +10,7 @@ type GameServer struct {
 	GameRoomsManager *GameRoomsManager
 }
 
-func (g *GameServer) Handle(writer http.ResponseWriter, request *http.Request) {
+func (g *GameServer) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	conn, err := g.Upgrader.Upgrade(writer, request, nil)
 	if err != nil {
 		http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
