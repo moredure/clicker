@@ -33,6 +33,7 @@ func (grm *GameRoomsManager) Connect(session *GameServerSession) {
 
 	// TODO lobby can become part of GameSceneController state
 	// with timeout to disconnect player/create AI bot if no new player connects
+	// OR create mediator object which will trigger creation of gsc with AI/disconnects
 	grm.lobby[session] = struct{}{}
 	if len(grm.lobby) != 2 {
 		return
