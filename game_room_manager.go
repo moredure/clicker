@@ -31,6 +31,8 @@ func (grm *GameRoomsManager) Connect(session *GameServerSession) {
 	grm.Lock()
 	defer grm.Unlock()
 
+	// TODO lobby can become part of GameSceneController state
+	// with timeout to disconnect player/create AI bot if no new player connects
 	grm.lobby[session] = struct{}{}
 	if len(grm.lobby) != 2 {
 		return
@@ -39,10 +41,10 @@ func (grm *GameRoomsManager) Connect(session *GameServerSession) {
 	grm.lobby = make(map[*GameServerSession]struct{}, 2)
 	gsc := NewGameSceneController(lobby, grm.cleanup)
 	for ps := range lobby {
+		grm.rooms[ps.Username] = gsc
 		ps.Subscribe(gsc.communicate)
 	}
 	go gsc.countdown()
-	grm.rooms[session.Username] = gsc
 	return
 }
 
