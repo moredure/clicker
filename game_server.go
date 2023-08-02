@@ -8,6 +8,11 @@ import (
 type GameServer struct {
 	Upgrader         *websocket.Upgrader
 	GameRoomsManager *GameRoomsManager
+	config           config
+}
+
+func NewGameServer(u *websocket.Upgrader, g *GameRoomsManager, c config) *GameServer {
+	return &GameServer{u, g, c}
 }
 
 func (g *GameServer) Handle(writer http.ResponseWriter, request *http.Request) {
@@ -16,9 +21,9 @@ func (g *GameServer) Handle(writer http.ResponseWriter, request *http.Request) {
 		http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
-	user := request.URL.Query().Get("username") // always uniq per player
+	user := request.URL.Query().Get(g.config.UsernameKey) // always uniq per player
 
-	gss := NewGameServerSession(conn, user)
+	gss := NewGameServerSession(conn, user, g.config.SocTimeout)
 
 	g.GameRoomsManager.Connect(gss)
 	defer g.GameRoomsManager.Disconnect(gss)

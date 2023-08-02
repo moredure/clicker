@@ -12,14 +12,16 @@ type GameServerSession struct {
 	sync.Mutex
 	f func(*GameServerSession, []byte)
 
-	conn     *websocket.Conn
-	Username string
+	conn              *websocket.Conn
+	connectionTimeout time.Duration
+	Username          string
 }
 
-func NewGameServerSession(conn *websocket.Conn, username string) *GameServerSession {
+func NewGameServerSession(conn *websocket.Conn, username string, t time.Duration) *GameServerSession {
 	return &GameServerSession{
-		conn:     conn,
-		Username: username,
+		conn:              conn,
+		Username:          username,
+		connectionTimeout: t,
 	}
 }
 
@@ -45,7 +47,7 @@ func (gss *GameServerSession) Close() {
 
 func (gss *GameServerSession) ListenConn() {
 	for {
-		deadline := time.Now().Add(15 * time.Second)
+		deadline := time.Now().Add(gss.connectionTimeout)
 		if err := gss.conn.SetReadDeadline(deadline); err != nil {
 			return
 		}

@@ -1,6 +1,8 @@
 package main
 
-import "time"
+import (
+	"time"
+)
 
 type ReentrantTimer struct {
 	left  time.Duration
