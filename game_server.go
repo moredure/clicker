@@ -5,13 +5,22 @@ import (
 	"net/http"
 )
 
+type Upgrader interface {
+	Upgrade(http.ResponseWriter, *http.Request, http.Header) (*websocket.Conn, error)
+}
+
+type RoomsManager interface {
+	Connect(*GameServerSession)
+	Disconnect(*GameServerSession)
+}
+
 type GameServer struct {
-	Upgrader         *websocket.Upgrader
-	GameRoomsManager *GameRoomsManager
+	Upgrader         Upgrader
+	GameRoomsManager RoomsManager
 	config           config
 }
 
-func NewGameServer(u *websocket.Upgrader, g *GameRoomsManager, c config) *GameServer {
+func NewGameServer(u Upgrader, g RoomsManager, c config) *GameServer {
 	return &GameServer{u, g, c}
 }
 
